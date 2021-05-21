@@ -9,9 +9,9 @@ public class BirdInput extends Bird{
 	
 	public BirdInput(UUID id, String washer, Date birthDate, char gender, String color,
 			String breed, String factors, String portation, Date dateAcquisition, Date dateDeath, String description,
-			UUID specieId, UUID fatherId, UUID motherId) {
+			UUID specieId, UUID fatherId, UUID motherId, UUID userProfileId) {
 		super(id, washer, birthDate, gender, color, breed, factors, portation, dateAcquisition, dateDeath,
-				description, specieId);
+				description, specieId, userProfileId);
 		this.fatherId = fatherId;
 		this.motherId = motherId;
 	}

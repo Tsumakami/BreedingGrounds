@@ -33,11 +33,11 @@ public class BirdDas extends GenericService implements BirdDao {
 	}
 	
 	@Override
-	public int insertBird(UUID id, BirdInput birdInput) {
+	public int insertBird(UUID id, BirdInput birdInput, UUID userProfileId) {
 		final String sql = "INSERT INTO bird"
 				+ " (id, washer, birth_date, gender, specie_id, color, breed,"
-				+ " factors, portation, date_acquisition, date_death, description, father, mother) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ " factors, portation, date_acquisition, date_death, description, father, mother, user_profile_id) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		int result = 0; 
 		
@@ -60,7 +60,8 @@ public class BirdDas extends GenericService implements BirdDao {
 					birdInput.getDateDeath(),
 					birdInput.getDescription(),
 					birdInput.getFatherId(),
-					birdInput.getMotherId()
+					birdInput.getMotherId(),
+					userProfileId
 			};
 
 			result = this.getJdbcTemplate().update(sql, params);
@@ -75,14 +76,14 @@ public class BirdDas extends GenericService implements BirdDao {
 	}
 
 	@Override
-	public List<BirdAllInfo> selectAllBirds() {
-		final String sql = "SELECT * FROM bird";
+	public List<BirdAllInfo> selectAllBirds(UUID userProfileId) {
+		final String sql = "SELECT * FROM bird where user_profile_id = ?::uuid";
 		final ResultSetExtractor<List<BirdAllInfo>> resultExtractor = birdResultExtractor(false);
 		
 		try {
 			logger.debug("Select all birds...");
 			
-			List<BirdAllInfo> listBirds = getJdbcTemplate().query(sql, resultExtractor); 
+			List<BirdAllInfo> listBirds = getJdbcTemplate().query(sql, resultExtractor, new Object[] { userProfileId.toString() }); 
 			
 			logger.debug("Select all birds, return {} birds.", listBirds.size());
 			
@@ -95,8 +96,8 @@ public class BirdDas extends GenericService implements BirdDao {
 	}
 
 	@Override
-	public Optional<BirdAllInfo> selectBirdById(UUID id) {
-		final String sql = "SELECT * FROM bird WHERE id = ?::uuid";
+	public Optional<BirdAllInfo> selectBirdById(UUID id, UUID userProfileId) {
+		final String sql = "SELECT * FROM bird WHERE id = ?::uuid and user_profile_id = ?::uuid";
 		final ResultSetExtractor<List<BirdAllInfo>> resultExtractor = birdResultExtractor(false);
 		BirdAllInfo bird = null;
 		
@@ -104,7 +105,7 @@ public class BirdDas extends GenericService implements BirdDao {
 			logger.debug("Select bird by Id={}",id.toString());
 			
 			List<BirdAllInfo> listBirds = getJdbcTemplate()
-					.query(sql, resultExtractor, new Object[] {id.toString()}); 
+					.query(sql, resultExtractor, new Object[] {id.toString(), userProfileId.toString()}); 
 			
 			if(!listBirds.isEmpty()) { 
 				bird = listBirds.get(0);
@@ -119,8 +120,8 @@ public class BirdDas extends GenericService implements BirdDao {
 	}
 
 	@Override
-	public int deleteBirdById(UUID id) {
-		final String sql = "DELETE FROM bird WHERE id = ?::uuid";
+	public int deleteBirdById(UUID id, UUID userProfileId) {
+		final String sql = "DELETE FROM bird WHERE id = ?::uuid and user_profile_id = ?::uuid";
 		int result = 0;
 		
 		try {
@@ -145,12 +146,12 @@ public class BirdDas extends GenericService implements BirdDao {
 	}
 
 	@Override
-	public int updateBirdById(UUID id, BirdInput birdInput) {
+	public int updateBirdById(UUID id, BirdInput birdInput, UUID userProfileId) {
 		final String sql = "UPDATE bird"
 				+ " SET ( washer, birth_date, gender, specie_id, color, breed,"
 				+ " factors, portation, date_acquisition, date_death, description, father, mother)"
 				+ " = (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-				+ " WHERE id = ?::uuid";
+				+ " WHERE id = ?::uuid and user_profile_id = ?::uuid";
 		
 		int result = 0; 
 		
@@ -173,7 +174,8 @@ public class BirdDas extends GenericService implements BirdDao {
 					birdInput.getDescription(),
 					birdInput.getFatherId(),
 					birdInput.getMotherId(),
-					id.toString()
+					id.toString(),
+					userProfileId.toString()
 			};
 
 			result = this.getJdbcTemplate().update(sql, params);
@@ -187,8 +189,8 @@ public class BirdDas extends GenericService implements BirdDao {
 		return result;
 	}
 	
-	public Optional<Bird> selectParentById(UUID id) {
-		final String sql = "SELECT * FROM bird WHERE id = ?::uuid";
+	public Optional<Bird> selectParentById(UUID id, UUID userProfileId) {
+		final String sql = "SELECT * FROM bird WHERE id = ?::uuid and user_profile_id = ?::uuid";
 		final ResultSetExtractor<List<BirdAllInfo>> resultExtractor = birdResultExtractor(false);
 		
 		Optional<Bird> bird = null;
@@ -196,7 +198,7 @@ public class BirdDas extends GenericService implements BirdDao {
 		try {
 			logger.debug("Select Parent Bird by id={}", id.toString());
 			
-			List<BirdAllInfo> listBirds = getJdbcTemplate().query(sql, resultExtractor, new Object[] {id.toString()}); 
+			List<BirdAllInfo> listBirds = getJdbcTemplate().query(sql, resultExtractor, new Object[] {id.toString(), userProfileId.toString()}); 
 			
 			bird = Optional.of((Bird) listBirds.get(0));
 			
@@ -248,10 +250,11 @@ public class BirdDas extends GenericService implements BirdDao {
 			Date dateDeath = resultSet.getDate("date_death");
 			String description = resultSet.getString("description");
 			UUID specieId = (UUID) resultSet.getObject("specie_id");
+			UUID userProfileId = (UUID) resultSet.getObject("user_profile_id");
 			
 			bird = new Bird(id, washer, birthDate, gender, color,
 					breed, factors, portation, dateAcquisition, dateDeath,
-					description, specieId);
+					description, specieId, userProfileId);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -271,16 +274,16 @@ public class BirdDas extends GenericService implements BirdDao {
 			Optional<BirdAllInfo> optionalMother = Optional.ofNullable(null);
 			Optional<Specie> specie = Optional.ofNullable(null);
 			
-			specie = this.getSpecieService().getSpecieById(bird.getSpecieId());
+			specie = this.getSpecieService().getSpecieById(bird.getSpecieId(), bird.getUserProfileId());
 			birdAllInfo.setSpecie(specie);
 			
 			if(fatherId != null) {
-				optionalFather = this.selectBirdById(fatherId);
+				optionalFather = this.selectBirdById(fatherId, bird.getUserProfileId());
 				birdAllInfo.setFather(optionalFather);
 			}
 			
 			if(motherId != null) {
-				optionalMother = this.selectBirdById(motherId);
+				optionalMother = this.selectBirdById(motherId, bird.getUserProfileId());
 				birdAllInfo.setMother(optionalMother);
 			}
 			
@@ -302,17 +305,17 @@ public class BirdDas extends GenericService implements BirdDao {
 			
 			Optional<Specie> optionalSpecie = Optional.ofNullable(null);
 			
-			optionalSpecie = this.getSpecieService().getSpecieById(bird.getSpecieId());
+			optionalSpecie = this.getSpecieService().getSpecieById(bird.getSpecieId(), bird.getUserProfileId());
 			birdAllInfo.setSpecie(optionalSpecie);
 
 			if(fatherId != null) {
-				BirdAllInfo father = this.mountParentBird(fatherId);
+				BirdAllInfo father = this.mountParentBird(fatherId, bird.getUserProfileId());
 				
 				birdAllInfo.setFather(Optional.of(father));
 			}
 			
 			if(motherId != null) {
-				BirdAllInfo mother = this.mountParentBird(motherId);
+				BirdAllInfo mother = this.mountParentBird(motherId, bird.getUserProfileId());
 				
 				birdAllInfo.setMother(Optional.of(mother));
 			}
@@ -324,12 +327,12 @@ public class BirdDas extends GenericService implements BirdDao {
 		return birdAllInfo;
 	}
 	
-	public BirdAllInfo mountParentBird(UUID birdId) {
+	public BirdAllInfo mountParentBird(UUID birdId, UUID userProfileId) {
 		BirdAllInfo parent = null;
 		
-		Optional<Bird> optionalParent = this.selectParentById(birdId);
+		Optional<Bird> optionalParent = this.selectParentById(birdId, userProfileId);
 		
-		Optional<Specie> specieParent = this.getSpecieService().getSpecieById(optionalParent.get().getSpecieId());
+		Optional<Specie> specieParent = this.getSpecieService().getSpecieById(optionalParent.get().getSpecieId(), userProfileId);
 		
 		parent = new BirdAllInfo(optionalParent.get());
 		parent.setSpecie(specieParent);

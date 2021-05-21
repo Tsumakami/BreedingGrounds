@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,28 +29,28 @@ public class BirdController {
 	}
 	
 	@PostMapping
-	public void addBird(@RequestBody BirdInput birdInput) {
-		this.getBirdService().addBird(birdInput);
+	public void addBird(@RequestBody BirdInput birdInput, HttpServletRequest request) {
+		this.getBirdService().addBird(birdInput, request);
 	}
 	
 	@GetMapping
-	public List<BirdAllInfo> selectAllBirds(){
-		return this.getBirdService().getAllBirds();
+	public List<BirdAllInfo> selectAllBirds(HttpServletRequest request){
+		return this.getBirdService().getAllBirds(request);
 	}
 	
 	@GetMapping(path = "{id}")
-	public Optional<BirdAllInfo> selectBirdById(@PathVariable("id") UUID id) {
-		return this.getBirdService().getBirdById(id);
+	public Optional<BirdAllInfo> selectBirdById(@PathVariable("id") UUID id, HttpServletRequest request) {
+		return this.getBirdService().getBirdById(id, request);
 	}
 	
 	@DeleteMapping(path = "{id}")
-	public void deleteBirdById(@PathVariable("id") UUID id) {
-		this.getBirdService().deleteBirdById(id);
+	public void deleteBirdById(@PathVariable("id") UUID id, HttpServletRequest request) {
+		this.getBirdService().deleteBirdById(id, request);
 	}
 	
 	@PutMapping(path = "{id}")
-	public void updateBirdById(@PathVariable("id") UUID id, @RequestBody BirdInput birdInput) {
-		this.getBirdService().updateSpecieById(id, birdInput);
+	public void updateBirdById(@PathVariable("id") UUID id, @RequestBody BirdInput birdInput, HttpServletRequest request) {
+		this.getBirdService().updateBirdById(id, birdInput, request);
 	}
 	
 	public BirdService getBirdService() {

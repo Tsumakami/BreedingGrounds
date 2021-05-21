@@ -97,4 +97,17 @@ public class JWTTokenService extends GenericService {
 		return valid;
 	}
 	
+	public Optional<Object> getPropertyInJWTtokenOnRequest(HttpServletRequest request, String propertyName){
+		Optional<Object> property = Optional.empty();
+		Optional<String> jwtToken = this.getTokenInHeader(request);
+		
+		if(jwtToken.isEmpty()) {
+			throw new JwtException("Jwt token not found in header.");
+		}
+		
+		property = this.getClaimInToken(jwtToken.get(), propertyName);
+		
+		return property;
+	}
+	
 }

@@ -11,19 +11,19 @@ import com.BreedingGrounds.model.Specie;
 @Repository("specie")
 public interface SpecieDao {
 
-	int insertSpecie(UUID id,Specie specie);
+	int insertSpecie(UUID id,Specie specie, UUID userProfileId);
 	
 	
-	default int insertSpecie(Specie specie) {
+	default int insertSpecie(Specie specie, UUID userProfileId) {
 		UUID id = UUID.randomUUID();
-		return insertSpecie(id, specie);
+		return insertSpecie(id, specie, userProfileId);
 	}
 
-	List<Specie> selectAllSpecie();
+	List<Specie> selectAllSpecie(UUID userProfileId);
 	
-	Optional<Specie> selectSpecieById(UUID id);
+	Optional<Specie> selectSpecieById(UUID id, UUID userProfileId);
 	
-	int deleteSpecieById(UUID  id);
+	int deleteSpecieById(UUID  id, UUID userProfileId);
 	
-	int updateSpecieById(UUID id, Specie specie);
+	int updateSpecieById(UUID id, Specie specie, UUID userProfileId);
 }

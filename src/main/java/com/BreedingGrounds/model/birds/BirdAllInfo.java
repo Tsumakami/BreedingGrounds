@@ -13,9 +13,9 @@ public class BirdAllInfo extends Bird {
 	
 	public BirdAllInfo(UUID id, String washer, Date birthDate, char gender, Optional<Specie> specie, String color,
 			String breed, String factors, String portation, Date dateAcquisition, Date dateDeath, String description, 
-			Optional<BirdAllInfo> father, Optional<BirdAllInfo> mother) {
+			Optional<BirdAllInfo> father, Optional<BirdAllInfo> mother, UUID userProfileId) {
 		super(id, washer, birthDate, gender, color, breed, factors, portation, dateAcquisition, dateDeath,
-				description, specie.get().getId());
+				description, specie.get().getId(), userProfileId);
 		this.specie = specie;
 		this.father = father;
 		this.mother = mother;
@@ -24,7 +24,7 @@ public class BirdAllInfo extends Bird {
 	public BirdAllInfo(Bird bird) {
 		super(bird.getId(), bird.getWasher(), bird.getBirthDate(), bird.getGender(),
 				bird.getColor(), bird.getBreed(), bird.getFactors(), bird.getPortation(), bird.getDateAcquisition(),
-				bird.getDateDeath(), bird.getDescription(), bird.getSpecieId());
+				bird.getDateDeath(), bird.getDescription(), bird.getSpecieId(), bird.getUserProfileId());
 	}
 	
 	public Optional<BirdAllInfo> getFather() {

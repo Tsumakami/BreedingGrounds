@@ -27,10 +27,10 @@ public class SpecieDas extends GenericService implements SpecieDao {
 	}
 
 	@Override
-	public int insertSpecie(UUID id, Specie specie) {
+	public int insertSpecie(UUID id, Specie specie, UUID userProfileId) {
 		final String sql = "INSERT INTO specie"
-				+ " (id, name, breed, incubation_period) "
-				+ "VALUES (?, ?, ?, ?)";
+				+ " (id, name, breed, incubation_period, user_profile_id) "
+				+ "VALUES (?, ?, ?, ?, ?)";
 		int result = 0; 
 		try {
 			specie.setId(id);
@@ -44,7 +44,8 @@ public class SpecieDas extends GenericService implements SpecieDao {
 					specie.getId(), 
 					specie.getName(), 
 					breeds, 
-					specie.getIncubationPeriod()
+					specie.getIncubationPeriod(),
+					userProfileId.toString()
 			};
 
 			result = this.getJdbcTemplate().update(sql, params);
@@ -59,14 +60,14 @@ public class SpecieDas extends GenericService implements SpecieDao {
 	}
 	
 	@Override
-	public List<Specie> selectAllSpecie() {
-		final String sql = "SELECT * FROM specie";
+	public List<Specie> selectAllSpecie(UUID userProfileId) {
+		final String sql = "SELECT * FROM specie where user_profile_id = ?::uuid";
 		final ResultSetExtractor<List<Specie>> resultExtractor = specieResultExtractor();
 		
 		try {
 			logger.debug("Select all species...");
 			
-			List<Specie> listSpecies = getJdbcTemplate().query(sql, resultExtractor); 
+			List<Specie> listSpecies = getJdbcTemplate().query(sql, resultExtractor, new Object[] { userProfileId.toString() }); 
 			
 			logger.debug("Select all species return {} species.", listSpecies.size());
 			
@@ -79,8 +80,8 @@ public class SpecieDas extends GenericService implements SpecieDao {
 	}
 	
 	@Override
-	public Optional<Specie> selectSpecieById(UUID id) {
-		final String sql = "SELECT * FROM specie WHERE id = ?::uuid";
+	public Optional<Specie> selectSpecieById(UUID id, UUID userProfileId) {
+		final String sql = "SELECT * FROM specie WHERE id = ?::uuid and user_profile_id = ?::uuid";
 		final ResultSetExtractor<List<Specie>> resultExtrator = specieResultExtractor();
 		Specie specie = null;
 		
@@ -88,7 +89,7 @@ public class SpecieDas extends GenericService implements SpecieDao {
 			logger.info("Select specie by id={}", id.toString());
 			
 			List<Specie> specieresults = this.getJdbcTemplate()
-					.query(sql,resultExtrator, new Object[] {id.toString()});
+					.query(sql,resultExtrator, new Object[] {id.toString(), userProfileId.toString()});
 			
 			if(!specieresults.isEmpty()) { 
 				specie = specieresults.get(0);
@@ -102,15 +103,16 @@ public class SpecieDas extends GenericService implements SpecieDao {
 	}
 
 	@Override
-	public int deleteSpecieById(UUID id) {
-		final String sql = "DELETE FROM specie WHERE id = ?::uuid";
+	public int deleteSpecieById(UUID id, UUID userProfileId) {
+		final String sql = "DELETE FROM specie WHERE id = ?::uuid and user_profile_id = ?::uuid";
 		int result = 0;
 		
 		try {
 			logger.debug("Delete specie by id={}.", id.toString());
 			
 			Object params[] = {
-					id.toString()
+					id.toString(),
+					userProfileId.toString()
 			};
 			
 			result = this.getJdbcTemplate().update(sql, params);
@@ -128,11 +130,11 @@ public class SpecieDas extends GenericService implements SpecieDao {
 	}
 
 	@Override
-	public int updateSpecieById(UUID id, Specie specie) {
+	public int updateSpecieById(UUID id, Specie specie, UUID userProfileId) {
 		final String sql = "UPDATE specie "
 				+ "SET (name, breed, incubation_period) "
 				+ "= (?, ?, ?) "
-				+ "WHERE id = ?::uuid";
+				+ "WHERE id = ?::uuid and user_profile_id = ?::uuid";
 		int result = 0; 
 		
 		try {
@@ -146,7 +148,8 @@ public class SpecieDas extends GenericService implements SpecieDao {
 					specie.getName(), 
 					breeds, 
 					specie.getIncubationPeriod(),
-					id.toString()
+					id.toString(),
+					userProfileId.toString()
 			};
 			
 			result = this.getJdbcTemplate().update(sql, params);
@@ -187,6 +190,7 @@ public class SpecieDas extends GenericService implements SpecieDao {
 			Array breeds = resultSet.getArray("breed");
 			int incubationPeriod  = resultSet.getInt("incubation_period");
 			ArrayList<String> breedsList = new ArrayList<String>();
+			UUID userProfileId = (UUID) resultSet.getObject("user_profile_id");
 			
 			if(breeds != null) {
 				String[] breedsArray = (String[]) breeds.getArray();
@@ -195,7 +199,7 @@ public class SpecieDas extends GenericService implements SpecieDao {
 				}
 			}
 
-			specie = new Specie(id, name, breedsList ,incubationPeriod);
+			specie = new Specie(id, name, breedsList ,incubationPeriod, userProfileId);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

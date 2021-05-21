@@ -3,13 +3,15 @@ package com.BreedingGrounds.model;
 import java.util.List;
 import java.util.UUID;
 
-public class Specie {
+public class Specie extends MainModel {
 	private UUID id;
 	private String name;
 	private List<String> breed;
 	private int incubationPeriod;
 	
-	public Specie(UUID id, String name, List<String> breed, int incubationPeriod) {
+	public Specie(UUID id, String name, List<String> breed, int incubationPeriod, UUID userProfileId) {
+		super(userProfileId);
+		
 		this.id = id;
 		this.name = name;
 		this.breed = breed;
@@ -51,12 +53,8 @@ public class Specie {
 	@Override
 	public String toString() {
 		return "Specie [id=" + id + ", name=" + name + ", breed=" + breed + ", incubationPeriod=" + incubationPeriod
-				+ "]";
+				+ ", userProfileId=" + getUserProfileId() + "]";
 	}
-	
-	
-	
-	
-	
+
 	
 }

@@ -3,7 +3,9 @@ package com.BreedingGrounds.model.birds;
 import java.util.Date;
 import java.util.UUID;
 
-public class Bird {
+import com.BreedingGrounds.model.MainModel;
+
+public class Bird extends MainModel {
 	private UUID id;
 	private String washer;
 	private Date birthDate;
@@ -18,7 +20,10 @@ public class Bird {
 	private UUID specieId;
 	
 	public Bird(UUID id, String washer, Date birthDate, char gender, String color,
-			String breed, String factors, String portation, Date dateAcquisition, Date dateDeath, String description, UUID specieId) {
+			String breed, String factors, String portation, Date dateAcquisition, 
+			Date dateDeath, String description, UUID specieId, UUID userProfileId) {
+		super(userProfileId);
+		
 		this.id = id;
 		this.washer = washer;
 		this.birthDate = birthDate;
@@ -31,6 +36,7 @@ public class Bird {
 		this.dateDeath = dateDeath;
 		this.description = description;
 		this.setSpecieId(specieId);
+		this.setUserProfileId(userProfileId);
 	}
 
 	public UUID getId() {
@@ -128,14 +134,13 @@ public class Bird {
 	public void setSpecieId(UUID specieId) {
 		this.specieId = specieId;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Bird [id=" + id + ", washer=" + washer + ", birthDate=" + birthDate + ", gender=" + gender + ", color="
 				+ color + ", breed=" + breed + ", factors=" + factors + ", portation=" + portation
 				+ ", dateAcquisition=" + dateAcquisition + ", dateDeath=" + dateDeath + ", description=" + description
-				+ ", specieId=" + specieId + "]";
+				+ ", specieId=" + specieId + ", userProfileId=" + getUserProfileId() + "]";
 	}
-
 
 }

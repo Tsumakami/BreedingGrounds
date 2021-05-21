@@ -7,66 +7,62 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.propertyeditors.UUIDEditor;
 import org.springframework.stereotype.Service;
 
-import com.BreedingGrounds.dao.BirdDao;
-import com.BreedingGrounds.model.birds.BirdAllInfo;
-import com.BreedingGrounds.model.birds.BirdInput;
+import com.BreedingGrounds.dao.CoupleDao;
+import com.BreedingGrounds.model.couple.Couple;
+import com.BreedingGrounds.model.couple.CoupleInput;
 
 @Service
-public class BirdService extends GenericService{
-	private final BirdDao birdDao;
+public class CoupleService {
+	private final CoupleDao coupleDao;
 	private final JWTTokenService jwtTokenService;
 	
 	@Autowired
-	public BirdService(@Qualifier("bird") BirdDao birdDao, JWTTokenService jwtTokenService) {
-		this.birdDao = birdDao;
+	public CoupleService(CoupleDao coupleDao, JWTTokenService jwtTokenService) {
+		this.coupleDao = coupleDao;
 		this.jwtTokenService = jwtTokenService;
 	}
 	
-	public int addBird(BirdInput birdInput, HttpServletRequest request) {
+	public int createCouple(CoupleInput coupleInput, HttpServletRequest request) {
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.getBirdDao().insertBird(birdInput, (UUID) uuidEditor.getValue());
+		return this.coupleDao.insertCouple(coupleInput, (UUID) uuidEditor.getValue());
 	}
 	
-	public List<BirdAllInfo> getAllBirds(HttpServletRequest request){
+	public List<Couple> getAllCouples(HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.getBirdDao().selectAllBirds((UUID) uuidEditor.getValue());
+		return this.coupleDao.selectAllCouples((UUID) uuidEditor.getValue());
 	}
 	
-	public Optional<BirdAllInfo> getBirdById(UUID id, HttpServletRequest request){
+	public Optional<Couple> getCoupleById(UUID id, HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.getBirdDao().selectBirdById(id, (UUID) uuidEditor.getValue());
+		return this.coupleDao.selectCoupleById(id, (UUID) uuidEditor.getValue());
 	}
 	
-	public int deleteBirdById(UUID id, HttpServletRequest request){
+	public int deleteCoupleById(UUID id, HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 				
-		return this.getBirdDao().deleteBirdById(id, (UUID) uuidEditor.getValue());
+		return this.coupleDao.deleteCoupleById(id, (UUID) uuidEditor.getValue());
 	}
 	
-	public int updateBirdById(UUID id, BirdInput birdInput, HttpServletRequest request) {
+	public int updateCoupleById(UUID id, CoupleInput coupleInput, HttpServletRequest request) {
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.getBirdDao().updateBirdById(id, birdInput, (UUID) uuidEditor.getValue());
+		return this.coupleDao.updateCoupleById(id, coupleInput, (UUID) uuidEditor.getValue());
 	}
-
-	public BirdDao getBirdDao() {
-		return birdDao;
-	}
+	
 }

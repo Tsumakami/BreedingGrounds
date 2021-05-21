@@ -152,6 +152,7 @@ public class UserProfileService extends GenericService implements UserDetailsSer
 		Date dateNow = new Date();
 		claims.put("createnDate", dateNow);
 		claims.put("username", login.getUsername());
+		claims.put("userProfileId", user.get().getId());
 		
 		String jwttoken = jwtTokenService.generateJWTToken(claims);
 		

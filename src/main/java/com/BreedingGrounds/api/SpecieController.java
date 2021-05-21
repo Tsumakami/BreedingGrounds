@@ -3,6 +3,8 @@ package com.BreedingGrounds.api;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,28 +29,28 @@ public class SpecieController {
 	}
 	
 	@PostMapping
-	public void addSpecie(@Validated @NonNull @RequestBody Specie specie) {
-		this.getSpecieService().addSpecie(specie);
+	public void addSpecie(@Validated @NonNull @RequestBody Specie specie, HttpServletRequest request) {
+		this.getSpecieService().addSpecie(specie, request);
 	}
 	
 	@GetMapping
-	public List<Specie> getAllSpecies(){
-		return this.getSpecieService().getAllSpecies();
+	public List<Specie> getAllSpecies(HttpServletRequest request){
+		return this.getSpecieService().getAllSpecies(request);
 	}
 	
 	@GetMapping(path = "/{id}")
-	public Object getSpecieById(@PathVariable("id") UUID id){
-		return this.getSpecieService().getSpecieById(id);
+	public Object getSpecieById(@PathVariable("id") UUID id, HttpServletRequest request){
+		return this.getSpecieService().getSpecieById(id, request);
 	}
 	
 	@DeleteMapping(path = "{id}")
-	public void deleteSpecieById(@PathVariable("id") UUID id) {
-		this.getSpecieService().deleteSpecieById(id);
+	public void deleteSpecieById(@PathVariable("id") UUID id, HttpServletRequest request) {
+		this.getSpecieService().deleteSpecieById(id, request);
 	}
 	
 	@PutMapping(path = "{id}")
-	public void updateSpecieById(@PathVariable("id") UUID id, @RequestBody Specie specie) {
-		getSpecieService().updateSpecieById(id, specie);
+	public void updateSpecieById(@PathVariable("id") UUID id, @RequestBody Specie specie, HttpServletRequest request) {
+		getSpecieService().updateSpecieById(id, specie, request);
 	}
 	
 	public SpecieService getSpecieService() {
