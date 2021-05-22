@@ -2,10 +2,10 @@ package com.BreedingGrounds.model.couple;
 
 import java.util.UUID;
 
-import com.BreedingGrounds.model.MainModel;
 import com.BreedingGrounds.model.birds.Bird;
+import com.BreedingGrounds.model.user.UserIdModel;
 
-public class Couple extends MainModel {
+public class Couple extends UserIdModel {
 	private UUID id;
 	private Bird maleBird;
 	private Bird femaleBird;

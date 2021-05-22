@@ -118,7 +118,7 @@ public class BirdDas extends GenericService implements BirdDao {
 		
 		return Optional.ofNullable(bird);
 	}
-
+	
 	@Override
 	public int deleteBirdById(UUID id, UUID userProfileId) {
 		final String sql = "DELETE FROM bird WHERE id = ?::uuid and user_profile_id = ?::uuid";
@@ -128,7 +128,8 @@ public class BirdDas extends GenericService implements BirdDao {
 			logger.debug("Delete bird by id={}.", id.toString());
 			
 			Object params[] = {
-					id.toString()
+					id.toString(),
+					userProfileId.toString()
 			};
 			
 			result = this.getJdbcTemplate().update(sql, params);

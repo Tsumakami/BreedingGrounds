@@ -1,11 +1,11 @@
-package com.BreedingGrounds.model;
+package com.BreedingGrounds.model.user;
 
 import java.util.UUID;
 
-public class MainModel {
+public class UserIdModel {
 	private UUID userProfileId;
 
-	public MainModel(UUID userProfileId) {
+	public UserIdModel(UUID userProfileId) {
 		this.userProfileId = userProfileId;
 	}
 	

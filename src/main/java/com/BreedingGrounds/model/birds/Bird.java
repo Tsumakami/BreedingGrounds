@@ -3,9 +3,9 @@ package com.BreedingGrounds.model.birds;
 import java.util.Date;
 import java.util.UUID;
 
-import com.BreedingGrounds.model.MainModel;
+import com.BreedingGrounds.model.user.UserIdModel;
 
-public class Bird extends MainModel {
+public class Bird extends UserIdModel {
 	private UUID id;
 	private String washer;
 	private Date birthDate;

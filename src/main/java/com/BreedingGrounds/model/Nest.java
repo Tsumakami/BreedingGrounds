@@ -2,7 +2,9 @@ package com.BreedingGrounds.model;
 
 import java.util.UUID;
 
-public class Nest extends MainModel {
+import com.BreedingGrounds.model.user.UserIdModel;
+
+public class Nest extends UserIdModel {
 
 	public Nest(UUID userProfileId) {
 		super(userProfileId);

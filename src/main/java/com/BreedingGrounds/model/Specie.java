@@ -3,7 +3,9 @@ package com.BreedingGrounds.model;
 import java.util.List;
 import java.util.UUID;
 
-public class Specie extends MainModel {
+import com.BreedingGrounds.model.user.UserIdModel;
+
+public class Specie extends UserIdModel {
 	private UUID id;
 	private String name;
 	private List<String> breed;

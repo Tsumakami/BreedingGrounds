@@ -50,6 +50,10 @@ public class BirdService extends GenericService{
 		return this.getBirdDao().selectBirdById(id, (UUID) uuidEditor.getValue());
 	}
 	
+	public Optional<BirdAllInfo> getBirdById(UUID id, UUID userProfileId){
+		return this.getBirdDao().selectBirdById(id, userProfileId);
+	}
+	
 	public int deleteBirdById(UUID id, HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
