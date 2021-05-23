@@ -10,63 +10,59 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.UUIDEditor;
 import org.springframework.stereotype.Service;
 
-import com.BreedingGrounds.dao.CoupleDao;
-import com.BreedingGrounds.model.couple.Couple;
-import com.BreedingGrounds.model.couple.CoupleInput;
+import com.BreedingGrounds.dao.NestDao;
+import com.BreedingGrounds.model.nest.Nest;
+import com.BreedingGrounds.model.nest.NestInput;
 
 @Service
-public class CoupleService {
-	private final CoupleDao coupleDao;
+public class NestService {
+	private final NestDao nestDao;
 	private final JWTTokenService jwtTokenService;
 	
 	@Autowired
-	public CoupleService(CoupleDao coupleDao, JWTTokenService jwtTokenService) {
-		this.coupleDao = coupleDao;
+	public NestService(NestDao nestDao, JWTTokenService jwtTokenService) {
+		this.nestDao = nestDao;
 		this.jwtTokenService = jwtTokenService;
 	}
 	
-	public int createCouple(CoupleInput coupleInput, HttpServletRequest request) {
+	public int createNest(NestInput nestInput, HttpServletRequest request) {
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.coupleDao.insertCouple(coupleInput, (UUID) uuidEditor.getValue());
+		return this.nestDao.insertNest(nestInput, (UUID) uuidEditor.getValue());
 	}
 	
-	public List<Couple> getAllCouples(HttpServletRequest request){
+	public List<Nest> getAllNests(HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.coupleDao.selectAllCouples((UUID) uuidEditor.getValue());
+		return this.nestDao.selectAllNests((UUID) uuidEditor.getValue());
 	}
 	
-	public Optional<Couple> getCoupleById(UUID id, HttpServletRequest request){
+	public Optional<Nest> getNestById(UUID id, HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.coupleDao.selectCoupleById(id, (UUID) uuidEditor.getValue());
+		return this.nestDao.selectNestById(id, (UUID) uuidEditor.getValue());
 	}
 	
-	public Optional<Couple> getCoupleById(UUID id, UUID userProfileId){
-		return this.coupleDao.selectCoupleById(id, userProfileId);
-	}
-	
-	public int deleteCoupleById(UUID id, HttpServletRequest request){
+	public int deleteNestById(UUID id, HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 				
-		return this.coupleDao.deleteCoupleById(id, (UUID) uuidEditor.getValue());
+		return this.nestDao.deleteNestById(id, (UUID) uuidEditor.getValue());
 	}
 	
-	public int updateCoupleById(UUID id, CoupleInput coupleInput, HttpServletRequest request) {
+	public int updateNestById(UUID id, NestInput nestInput, HttpServletRequest request) {
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.coupleDao.updateCoupleById(id, coupleInput, (UUID) uuidEditor.getValue());
+		return this.nestDao.updateNestById(id, nestInput, (UUID) uuidEditor.getValue());
 	}
 	
 }

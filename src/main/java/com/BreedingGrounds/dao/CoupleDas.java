@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.stereotype.Repository;
 
 import com.BreedingGrounds.model.birds.BirdAllInfo;
 import com.BreedingGrounds.model.couple.Couple;
@@ -17,6 +18,7 @@ import com.BreedingGrounds.model.couple.CoupleInput;
 import com.BreedingGrounds.service.BirdService;
 import com.BreedingGrounds.service.GenericService;
 
+@Repository("couple")
 public class CoupleDas extends GenericService implements CoupleDao {
 	
 	private final JdbcTemplate jdbcTemplate;
@@ -31,8 +33,8 @@ public class CoupleDas extends GenericService implements CoupleDao {
 	@Override
 	public int createCouple(UUID id, CoupleInput coupleInput, UUID userProfileId) {
 		final String sql = "INSERT INTO couple"
-				+ " (id, male_bird, female_bird) "
-				+ "VALUES (?, ?, ?)";
+				+ " (id, male_bird, female_bird, user_profile_id) "
+				+ "VALUES (?, ?, ?, ?)";
 		int result = 0; 
 		
 		try {
@@ -57,7 +59,7 @@ public class CoupleDas extends GenericService implements CoupleDao {
 
 	@Override
 	public List<Couple> selectAllCouples(UUID userProfileId) {
-		final String sql = "SELECT * FROM couple where ";
+		final String sql = "SELECT * FROM couple where user_profile_id = ?::uuid ";
 		final ResultSetExtractor<List<Couple>> resultExtractor = coupleResultExtractor(userProfileId);
 		
 		try {
