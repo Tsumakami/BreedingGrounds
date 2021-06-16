@@ -50,7 +50,7 @@ public class CoupleService {
 	}
 	
 	public Optional<Couple> getCoupleById(UUID id, UUID userProfileId){
-		return this.coupleDao.selectCoupleById(id, userProfileId);
+		return this.coupleDao.selectCoupleById(id, userProfileId		);
 	}
 	
 	public int deleteCoupleById(UUID id, HttpServletRequest request){

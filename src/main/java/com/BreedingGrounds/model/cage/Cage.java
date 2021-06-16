@@ -1,9 +1,9 @@
-package com.BreedingGrounds.model;
+package com.BreedingGrounds.model.cage;
 
 import java.util.List;
 import java.util.UUID;
 
-import com.BreedingGrounds.model.birds.Bird;
+import com.BreedingGrounds.model.birds.BirdAllInfo;
 import com.BreedingGrounds.model.couple.Couple;
 import com.BreedingGrounds.model.nest.Nest;
 import com.BreedingGrounds.model.user.UserIdModel;
@@ -13,16 +13,20 @@ public class Cage extends UserIdModel{
 	private String displayName;
 	private String description;
 	private List<Nest> nests;
-	private List<Bird> birds;
-	private List<Couple> couple;
+	private List<BirdAllInfo> birds;
+	private List<Couple> couples;
 	
 	public Cage(UUID id, String displayName, String description,
-			List<Nest> nest, List<Bird> birds, List<Couple> couple,
+			List<Nest> nests, List<BirdAllInfo> birds, List<Couple> couples,
 			UUID userProfileId) {
 		
 		super(userProfileId);
+		this.id = id;
 		this.displayName = displayName;
 		this.description = description;
+		this.nests = nests;
+		this.birds = birds;
+		this.couples = couples;
 	}
 
 	public UUID getId() {
@@ -57,20 +61,20 @@ public class Cage extends UserIdModel{
 		this.nests = nests;
 	}
 
-	public List<Bird> getBirds() {
+	public List<BirdAllInfo> getBirds() {
 		return birds;
 	}
 
-	public void setBirds(List<Bird> birds) {
+	public void setBirds(List<BirdAllInfo> birds) {
 		this.birds = birds;
 	}
 
-	public List<Couple> getCouple() {
-		return couple;
+	public List<Couple> getCouples() {
+		return couples;
 	}
 
-	public void setCouple(List<Couple> couple) {
-		this.couple = couple;
+	public void setCouple(List<Couple> couples) {
+		this.couples = couples;
 	}
 	
 }

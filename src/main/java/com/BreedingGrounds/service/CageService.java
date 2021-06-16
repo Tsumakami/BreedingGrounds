@@ -10,63 +10,59 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.UUIDEditor;
 import org.springframework.stereotype.Service;
 
-import com.BreedingGrounds.dao.NestDao;
-import com.BreedingGrounds.model.nest.Nest;
-import com.BreedingGrounds.model.nest.NestInput;
+import com.BreedingGrounds.dao.CageDao;
+import com.BreedingGrounds.model.cage.Cage;
+import com.BreedingGrounds.model.cage.CageInput;
 
 @Service
-public class NestService {
-	private final NestDao nestDao;
+public class CageService {
+	private final CageDao cageDao;
 	private final JWTTokenService jwtTokenService;
 	
 	@Autowired
-	public NestService(NestDao nestDao, JWTTokenService jwtTokenService) {
-		this.nestDao = nestDao;
+	public CageService(CageDao cageDao, JWTTokenService jwtTokenService) {
+		this.cageDao = cageDao;
 		this.jwtTokenService = jwtTokenService;
 	}
 	
-	public int createNest(NestInput nestInput, HttpServletRequest request) {
+	public int createCage(CageInput cageInput, HttpServletRequest request) {
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.nestDao.insertNest(nestInput, (UUID) uuidEditor.getValue());
+		return this.cageDao.insertCage(cageInput, (UUID) uuidEditor.getValue());
 	}
 	
-	public List<Nest> getAllNests(HttpServletRequest request){
+	public List<Cage> getAllCages(HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.nestDao.selectAllNests((UUID) uuidEditor.getValue());
+		return this.cageDao.selectAllCages((UUID) uuidEditor.getValue());
 	}
 	
-	public Optional<Nest> getNestById(UUID id, HttpServletRequest request){
+	public Optional<Cage> getCageById(UUID id, HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.nestDao.selectNestById(id, (UUID) uuidEditor.getValue());
+		return this.cageDao.selectCageById(id, (UUID) uuidEditor.getValue());
 	}
 	
-	public Optional<Nest> getNestById(UUID id, UUID userProfileId){
-		return this.nestDao.selectNestById(id, userProfileId);
-	}
-	
-	public int deleteNestById(UUID id, HttpServletRequest request){
+	public int deleteCageById(UUID id, HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 				
-		return this.nestDao.deleteNestById(id, (UUID) uuidEditor.getValue());
+		return this.cageDao.deleteCageById(id, (UUID) uuidEditor.getValue());
 	}
 	
-	public int updateNestById(UUID id, NestInput nestInput, HttpServletRequest request) {
+	public int updateCageById(UUID id, CageInput cageInput, HttpServletRequest request) {
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
 		uuidEditor.setAsText(userProfileId.get().toString());
 		
-		return this.nestDao.updateNestById(id, nestInput, (UUID) uuidEditor.getValue());
+		return this.cageDao.updateCageById(id, cageInput, (UUID) uuidEditor.getValue());
 	}
 	
 }

@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.stereotype.Repository;
+
 import com.BreedingGrounds.model.user.Session;
 
+@Repository("session")
 public interface SessionDao {
 	int insertSession(UUID id, Session session);
 	

@@ -18,7 +18,7 @@ import com.BreedingGrounds.model.nest.NestInput;
 import com.BreedingGrounds.service.CoupleService;
 import com.BreedingGrounds.service.GenericService;
 
-@Repository("Nest")
+@Repository("nest")
 public class NestDas extends GenericService implements NestDao {
 	private final JdbcTemplate jdbcTemplate;
 	private final CoupleService coupleService;
@@ -45,7 +45,7 @@ public class NestDas extends GenericService implements NestDao {
 					nestInput.getDisplayName(),
 					nestInput.getDescription(),
 					nestInput.getCoupleId(),
-					userProfileId.toString()
+					userProfileId
 			};
 
 			result = this.jdbcTemplate.update(sql, params);
@@ -66,7 +66,7 @@ public class NestDas extends GenericService implements NestDao {
 		try {
 			logger.debug("Select all nests...");
 			
-			List<Nest> listNests = jdbcTemplate.query(sql, resultExtractor); 
+			List<Nest> listNests = jdbcTemplate.query(sql, resultExtractor, new Object[] { userProfileId.toString() }); 
 			
 			logger.debug("Select all nests return {} couples.", listNests.size());
 			
@@ -184,7 +184,11 @@ public class NestDas extends GenericService implements NestDao {
 			String description = resultSet.getString("description");
 			UUID coupleId = (UUID) resultSet.getObject("couple");
 			
-			Optional<Couple> couple = coupleService.getCoupleById(coupleId, userProfileId);
+			Optional<Couple> couple = Optional.ofNullable(null);
+			
+			if(coupleId != null) {
+				couple = coupleService.getCoupleById(coupleId, userProfileId);
+			}
 			
 			nest = new Nest(
 					id, 

@@ -31,12 +31,12 @@ public class NestController {
 	}
 	
 	@PostMapping
-	public int createCouple(@RequestBody NestInput nestInput, HttpServletRequest request) {
+	public int createNest(@RequestBody NestInput nestInput, HttpServletRequest request) {
 		return this.nestService.createNest(nestInput, request);
 	}
 	
 	@GetMapping
-	public List<Nest> selectAllCouples(HttpServletRequest request){
+	public List<Nest> selectAllNests(HttpServletRequest request){
 		return this.nestService.getAllNests(request);
 	}
 	

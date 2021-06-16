@@ -44,7 +44,8 @@ public class CoupleDas extends GenericService implements CoupleDao {
 			Object params[] = {
 					id, 
 					coupleInput.getMaleBirdId(),
-					coupleInput.getFemaleBirdId()
+					coupleInput.getFemaleBirdId(),
+					userProfileId
 			};
 
 			result = this.jdbcTemplate.update(sql, params);
@@ -65,7 +66,7 @@ public class CoupleDas extends GenericService implements CoupleDao {
 		try {
 			logger.debug("Select all couples...");
 			
-			List<Couple> listCouples = jdbcTemplate.query(sql, resultExtractor); 
+			List<Couple> listCouples = jdbcTemplate.query(sql, resultExtractor, new Object[] { userProfileId.toString() } ); 
 			
 			logger.debug("Select all couples return {} couples.", listCouples.size());
 			

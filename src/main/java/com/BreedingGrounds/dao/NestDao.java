@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.stereotype.Repository;
+
 import com.BreedingGrounds.model.nest.Nest;
 import com.BreedingGrounds.model.nest.NestInput;
 
+@Repository("nest")
 public interface NestDao {
 	int createNest(UUID id, NestInput nestInput, UUID userProfileId);
 	
