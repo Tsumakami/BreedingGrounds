@@ -15,6 +15,8 @@ import org.springframework.stereotype.Repository;
 import com.BreedingGrounds.model.birds.BirdAllInfo;
 import com.BreedingGrounds.model.couple.Couple;
 import com.BreedingGrounds.model.couple.CoupleInput;
+import com.BreedingGrounds.model.couple.Posture;
+import com.BreedingGrounds.model.couple.PostureInput;
 import com.BreedingGrounds.service.BirdService;
 import com.BreedingGrounds.service.GenericService;
 
@@ -102,6 +104,52 @@ public class CoupleDas extends GenericService implements CoupleDao {
 		return Optional.ofNullable(couple);
 	}
 
+	public Optional<Couple> selectCoupleBymaleBirdId(UUID maleBirdId, UUID userProfileId) {
+		final String sql = "SELECT * FROM couple WHERE male_bird = ?::uuid and user_profile_id = ?::uuid";
+		final ResultSetExtractor<List<Couple>> resultExtractor = coupleResultExtractor(userProfileId);
+		Couple couple = null;
+		
+		try {
+			logger.debug("Select couple by male bird Id={}",maleBirdId.toString());
+			
+			List<Couple> listCouples = jdbcTemplate
+					.query(sql, resultExtractor, new Object[] {maleBirdId.toString(), userProfileId.toString()}); 
+			
+			if(!listCouples.isEmpty()) { 
+				couple = listCouples.get(0);
+				logger.debug("Select couple by male bird id={}, return {}.", maleBirdId, couple.toString());
+			}
+			
+		} catch (Exception e) {
+			logger.error("Fail to select all couples, error={}", e);
+		}
+		
+		return Optional.ofNullable(couple);
+	}
+	
+	public Optional<Couple> selectCoupleByfemaleBirdId(UUID femaleBirdId, UUID userProfileId) {
+		final String sql = "SELECT * FROM couple WHERE female_bird = ?::uuid and user_profile_id = ?::uuid";
+		final ResultSetExtractor<List<Couple>> resultExtractor = coupleResultExtractor(userProfileId);
+		Couple couple = null;
+		
+		try {
+			logger.debug("Select couple by female bird Id={}",femaleBirdId.toString());
+			
+			List<Couple> listCouples = jdbcTemplate
+					.query(sql, resultExtractor, new Object[] {femaleBirdId.toString(), userProfileId.toString()}); 
+			
+			if(!listCouples.isEmpty()) { 
+				couple = listCouples.get(0);
+				logger.debug("Select couple by male bird id={}, return {}.", femaleBirdId, couple.toString());
+			}
+			
+		} catch (Exception e) {
+			logger.error("Fail to select all couples, error={}", e);
+		}
+		
+		return Optional.ofNullable(couple);
+	}
+	
 	@Override
 	public int deleteCoupleById(UUID id, UUID userProfileId) {
 		final String sql = "DELETE FROM couple WHERE id = ?::uuid and user_profile_id = ?::uuid";
@@ -158,7 +206,7 @@ public class CoupleDas extends GenericService implements CoupleDao {
 		
 		return result;
 	}
-
+		
 	private ResultSetExtractor<List<Couple>> coupleResultExtractor(UUID userProfileId) {
 		ResultSetExtractor<List<Couple>> resultExtractor = (resultSet) -> {
 			List<Couple> couples = new ArrayList<Couple>();

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import com.BreedingGrounds.dao.CoupleDao;
 import com.BreedingGrounds.model.couple.Couple;
 import com.BreedingGrounds.model.couple.CoupleInput;
+import com.BreedingGrounds.model.couple.Posture;
+import com.BreedingGrounds.model.couple.PostureInput;
 
 @Service
 public class CoupleService {
@@ -68,5 +70,6 @@ public class CoupleService {
 		
 		return this.coupleDao.updateCoupleById(id, coupleInput, (UUID) uuidEditor.getValue());
 	}
+
 	
 }

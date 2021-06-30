@@ -45,7 +45,7 @@ public class SpecieDas extends GenericService implements SpecieDao {
 					specie.getName(), 
 					breeds, 
 					specie.getIncubationPeriod(),
-					userProfileId.toString()
+					userProfileId
 			};
 
 			result = this.getJdbcTemplate().update(sql, params);

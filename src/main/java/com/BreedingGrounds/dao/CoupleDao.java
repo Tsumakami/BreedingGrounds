@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.BreedingGrounds.model.couple.Couple;
 import com.BreedingGrounds.model.couple.CoupleInput;
+import com.BreedingGrounds.model.couple.Posture;
+import com.BreedingGrounds.model.couple.PostureInput;
 
 @Repository("couple")
 public interface CoupleDao {
@@ -25,4 +27,5 @@ public interface CoupleDao {
 	int deleteCoupleById(UUID  id, UUID userProfileId);
 	
 	int updateCoupleById(UUID id, CoupleInput coupleInput, UUID userProfileId);
+	
 }

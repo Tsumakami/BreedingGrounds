@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.BreedingGrounds.model.couple.Couple;
 import com.BreedingGrounds.model.couple.CoupleInput;
+import com.BreedingGrounds.model.couple.Posture;
+import com.BreedingGrounds.model.couple.PostureInput;
 import com.BreedingGrounds.service.CoupleService;
 
 @RequestMapping("api/v1/couple")
