@@ -103,6 +103,30 @@ public class NestDas extends GenericService implements NestDao {
 	}
 
 	@Override
+	public Optional<Nest> selectNestByCoupleId(UUID coupleId, UUID userProfileId) {
+		final String sql = "SELECT * FROM nest WHERE couple = ?::uuid and user_profile_id = ?::uuid";
+		final ResultSetExtractor<List<Nest>> resultExtractor = nestResultExtractor(userProfileId);
+		Nest nest = null;
+		
+		try {
+			logger.debug("Select nest by couple Id={}",coupleId.toString());
+			
+			List<Nest> listNests = jdbcTemplate
+					.query(sql, resultExtractor, new Object[] {coupleId.toString(), userProfileId.toString()}); 
+			
+			if(!listNests.isEmpty()) { 
+				nest = listNests.get(0);
+				logger.debug("Select nest by couple id={}, return {}.", coupleId, nest.toString());
+			}
+			
+		} catch (Exception e) {
+			logger.error("Fail to select nest by couple id={}, error={}", coupleId.toString(), e);
+		}
+		
+		return Optional.ofNullable(nest);
+	}
+	
+	@Override
 	public int deleteNestById(UUID id, UUID userProfileId) {
 		final String sql = "DELETE FROM nest WHERE id = ?::uuid and user_profile_id = ?::uuid";
 		int result = 0;
@@ -194,7 +218,7 @@ public class NestDas extends GenericService implements NestDao {
 					id, 
 					displayName,
 					description,
-					couple.get(),
+					couple.orElse(null),
 					userProfileId
 				);
 			

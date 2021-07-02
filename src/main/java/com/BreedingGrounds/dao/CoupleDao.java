@@ -24,6 +24,10 @@ public interface CoupleDao {
 	
 	Optional<Couple> selectCoupleById(UUID id, UUID userProfileId);
 	
+	Optional<Couple> selectCoupleBymaleBirdId(UUID maleBirdId, UUID userProfileId);
+	
+	Optional<Couple> selectCoupleByfemaleBirdId(UUID femaleBirdId, UUID userProfileId);
+	
 	int deleteCoupleById(UUID  id, UUID userProfileId);
 	
 	int updateCoupleById(UUID id, CoupleInput coupleInput, UUID userProfileId);

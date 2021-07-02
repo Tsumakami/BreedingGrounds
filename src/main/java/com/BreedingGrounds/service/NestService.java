@@ -53,6 +53,10 @@ public class NestService {
 		return this.nestDao.selectNestById(id, userProfileId);
 	}
 	
+	public Optional<Nest> getNestByCoupleId(UUID coupleId, UUID userProfileId){
+		return this.nestDao.selectNestByCoupleId(coupleId, userProfileId);
+	}
+	
 	public int deleteNestById(UUID id, HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();

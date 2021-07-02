@@ -56,9 +56,13 @@ public class CageDas extends GenericService implements CageDao {
 			CageInput cageInputRight = cageInputCorrector(cageInput, userProfileId); 
 			
 			Connection connection = this.jdbcTemplate.getDataSource().getConnection();
-			Array nests = connection.createArrayOf("uuid", cageInputRight.getNests().toArray());
-			Array birds = connection.createArrayOf("uuid", cageInputRight.getBirds().toArray());
-			Array couples = connection.createArrayOf("uuid", cageInputRight.getCouples().toArray());
+			
+			Array nests = cageInputRight.getNests() != null ? 
+					connection.createArrayOf("uuid", cageInputRight.getNests().toArray()) : null;
+			Array birds = cageInputRight.getBirds() != null ? 
+					connection.createArrayOf("uuid", cageInputRight.getBirds().toArray()) : null;
+			Array couples = cageInputRight.getCouples() != null ?
+					connection.createArrayOf("uuid", cageInputRight.getCouples().toArray()) : null;
 			
 			Object params[] = {
 					id, 
@@ -193,23 +197,29 @@ public class CageDas extends GenericService implements CageDao {
 	
 	private CageInput cageInputCorrector(CageInput cageInput, UUID userProfileId) {
 		if(cageInput.getNests() != null && !cageInput.getNests().isEmpty()) {
+			List<UUID> couplesList = new ArrayList<UUID>();
 			for(UUID nestId : cageInput.getNests()) {
 				Optional<Nest> nest = nestService.getNestById(nestId, userProfileId);
 				if(nest.isPresent()) {
-					UUID coupleId = nest.get().getCouple().getId();
-					if(!cageInput.getCouples().contains(coupleId)) {
-						cageInput.getCouples().add(coupleId);
-					}
-					
-					Bird birdMale = nest.get().getCouple().getMaleBird();
-					Bird birdFemale = nest.get().getCouple().getFemaleBird();
-					
-					if(!cageInput.getBirds().contains(birdMale.getId())) {
-						cageInput.getBirds().add(birdMale.getId());
-					}
-					
-					if(!cageInput.getBirds().contains(birdFemale.getId())) {
-						cageInput.getBirds().add(birdFemale.getId());
+					if(nest.get().getCouple()!= null) {
+						UUID coupleId = nest.get().getCouple().getId();
+						if(cageInput.getCouples() != null && !cageInput.getCouples().contains(coupleId)) {
+							cageInput.getCouples().add(coupleId);
+						}else {
+							couplesList.add(coupleId);
+							cageInput.setCouples(couplesList);
+						}
+						
+						Bird birdMale = nest.get().getCouple().getMaleBird();
+						Bird birdFemale = nest.get().getCouple().getFemaleBird();
+						
+						if(!cageInput.getBirds().contains(birdMale.getId())) {
+							cageInput.getBirds().add(birdMale.getId());
+						}
+						
+						if(!cageInput.getBirds().contains(birdFemale.getId())) {
+							cageInput.getBirds().add(birdFemale.getId());
+						}
 					}
 				}
 			}
@@ -231,6 +241,67 @@ public class CageDas extends GenericService implements CageDao {
 					}
 				}
 			}
+		}
+		
+		if(cageInput.getBirds() != null && !cageInput.getBirds().isEmpty()) {
+			List<UUID> couplesIds = new ArrayList<UUID>();
+			List<UUID> nestIds = new ArrayList<UUID>();
+			
+			for(UUID birdId : cageInput.getBirds()) {
+				Optional<BirdAllInfo> bird = birdService.getBirdById(birdId, userProfileId);
+				
+				if(bird.isPresent()) {
+					char gender = bird.get().getGender();
+					
+					Optional<Couple> couple = Optional.empty();
+					if(gender == 'M') {
+						couple = this.coupleService.getCoupleByMaleBirdId(bird.get().getId(), userProfileId);
+					}else if(gender == 'F') {
+						couple = this.coupleService.getCoupleByFemaleBirdId(bird.get().getId(), userProfileId);
+					}
+					
+					if(couple.isPresent()) {
+						boolean birdMaleInsertInCage = cageInput.getBirds().contains(couple.get().getMaleBird().getId());
+						boolean birdFemaleInsertInCage = cageInput.getBirds().contains(couple.get().getFemaleBird().getId());
+						
+						if(birdMaleInsertInCage && birdFemaleInsertInCage) {
+							if(couplesIds.isEmpty() || !couplesIds.contains(couple.get().getId()) && !cageInput.getCouples().contains(couple.get().getId())) {
+								couplesIds.add(couple.get().getId());
+							}
+						}
+					}					
+				}	
+			}
+			
+			if(!couplesIds.isEmpty()) {
+				if(cageInput.getCouples() != null) {
+					for(UUID coupleId : couplesIds) {
+						if(!cageInput.getCouples().contains(coupleId)) {
+							cageInput.getCouples().add(coupleId);						
+						}
+					}
+				}else {
+					cageInput.setCouples(couplesIds);
+				}
+			}
+			
+			if(cageInput.getCouples() != null && !cageInput.getCouples().isEmpty()) {
+				for(UUID coupleId : cageInput.getCouples()) {
+					Optional<Nest> nest = this.nestService.getNestByCoupleId(coupleId, userProfileId);
+					
+					if(nest.isPresent()) {
+						if(cageInput.getNests() != null && !cageInput.getNests().contains(nest.get().getId())) {
+							cageInput.getNests().add(nest.get().getId());
+						}else {
+							nestIds.add(nest.get().getId());
+							cageInput.setNests(nestIds);
+						}
+					}
+				}
+				
+			}
+			
+			
 		}
 				
 		return cageInput;

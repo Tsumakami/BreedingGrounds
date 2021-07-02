@@ -22,6 +22,8 @@ public interface NestDao {
 	
 	Optional<Nest> selectNestById(UUID id, UUID userProfileId);
 	
+	Optional<Nest> selectNestByCoupleId(UUID coupleId, UUID userProfileId);
+	
 	int deleteNestById(UUID  id, UUID userProfileId);
 	
 	int updateNestById(UUID id, NestInput nestInput, UUID userProfileId);

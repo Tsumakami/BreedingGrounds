@@ -55,6 +55,14 @@ public class CoupleService {
 		return this.coupleDao.selectCoupleById(id, userProfileId		);
 	}
 	
+	public Optional<Couple> getCoupleByMaleBirdId(UUID maleBirdId, UUID userProfileId){
+		return this.coupleDao.selectCoupleBymaleBirdId(maleBirdId, userProfileId);
+	}
+	
+	public Optional<Couple> getCoupleByFemaleBirdId(UUID femaleBirdId, UUID userProfileId){
+		return this.coupleDao.selectCoupleByfemaleBirdId(femaleBirdId, userProfileId);
+	}
+	
 	public int deleteCoupleById(UUID id, HttpServletRequest request){
 		Optional<Object> userProfileId = jwtTokenService.getPropertyInJWTtokenOnRequest(request, "userProfileId");
 		UUIDEditor uuidEditor = new UUIDEditor();
