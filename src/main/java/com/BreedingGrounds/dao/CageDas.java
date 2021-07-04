@@ -170,9 +170,13 @@ public class CageDas extends GenericService implements CageDao {
 			CageInput cageInputRight = cageInputCorrector(cageInput, userProfileId); 
 			
 			Connection connection = this.jdbcTemplate.getDataSource().getConnection();
-			Array nests = connection.createArrayOf("uuid", cageInputRight.getNests().toArray());
-			Array birds = connection.createArrayOf("uuid", cageInputRight.getBirds().toArray());
-			Array couples = connection.createArrayOf("uuid", cageInputRight.getCouples().toArray());
+			
+			Array nests = cageInputRight.getNests() != null ? 
+					connection.createArrayOf("uuid", cageInputRight.getNests().toArray()) : null;
+			Array birds = cageInputRight.getBirds() != null ? 
+					connection.createArrayOf("uuid", cageInputRight.getBirds().toArray()) : null;
+			Array couples = cageInputRight.getCouples() != null ?
+					connection.createArrayOf("uuid", cageInputRight.getCouples().toArray()) : null;
 			
 			Object params[] = {
 				cageInput.getDisplayName(),
