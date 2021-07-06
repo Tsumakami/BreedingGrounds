@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.BreedingGrounds.model.Specie;
 import com.BreedingGrounds.model.birds.Bird;
@@ -94,7 +95,8 @@ public class BirdDas extends GenericService implements BirdDao {
 		}
 		return null;
 	}
-
+	
+	@Transactional
 	@Override
 	public Optional<BirdAllInfo> selectBirdById(UUID id, UUID userProfileId) {
 		final String sql = "SELECT * FROM bird WHERE id = ?::uuid and user_profile_id = ?::uuid";

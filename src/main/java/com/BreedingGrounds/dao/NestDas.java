@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.BreedingGrounds.model.couple.Couple;
 import com.BreedingGrounds.model.nest.Nest;
@@ -78,6 +79,7 @@ public class NestDas extends GenericService implements NestDao {
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public Optional<Nest> selectNestById(UUID id, UUID userProfileId) {
 		final String sql = "SELECT * FROM nest WHERE id = ?::uuid and user_profile_id = ?::uuid";
@@ -102,6 +104,7 @@ public class NestDas extends GenericService implements NestDao {
 		return Optional.ofNullable(nest);
 	}
 
+	@Transactional
 	@Override
 	public Optional<Nest> selectNestByCoupleId(UUID coupleId, UUID userProfileId) {
 		final String sql = "SELECT * FROM nest WHERE couple = ?::uuid and user_profile_id = ?::uuid";

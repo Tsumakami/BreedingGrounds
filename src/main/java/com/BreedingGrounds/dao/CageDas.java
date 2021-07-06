@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.BreedingGrounds.model.birds.Bird;
 import com.BreedingGrounds.model.birds.BirdAllInfo;
@@ -103,7 +104,8 @@ public class CageDas extends GenericService implements CageDao {
 		}
 		return null;
 	}
-
+	
+	@Transactional
 	@Override
 	public Optional<Cage> selectCageById(UUID id, UUID userProfileId) {
 		final String sql = "SELECT * FROM cage WHERE id = ?::uuid and user_profile_id = ?::uuid";

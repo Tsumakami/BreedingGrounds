@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.BreedingGrounds.model.Specie;
 import com.BreedingGrounds.service.GenericService;
@@ -79,6 +80,7 @@ public class SpecieDas extends GenericService implements SpecieDao {
 		return null;
 	}
 	
+	@Transactional
 	@Override
 	public Optional<Specie> selectSpecieById(UUID id, UUID userProfileId) {
 		final String sql = "SELECT * FROM specie WHERE id = ?::uuid and user_profile_id = ?::uuid";

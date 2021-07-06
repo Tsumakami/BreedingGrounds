@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.BreedingGrounds.model.user.Session;
 import com.BreedingGrounds.service.GenericService;
@@ -74,7 +75,8 @@ public class SessionDas extends GenericService implements SessionDao {
 		}
 		return null;
 	}
-
+	
+	@Transactional
 	@Override
 	public Optional<Session> selectSessionById(UUID id) {
 		final String sql = "SELECT * FROM session WHERE id = ?::uuid";

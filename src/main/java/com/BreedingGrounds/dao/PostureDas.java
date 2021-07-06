@@ -13,12 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.BreedingGrounds.model.Specie;
 import com.BreedingGrounds.model.couple.Couple;
 import com.BreedingGrounds.model.couple.Posture;
 import com.BreedingGrounds.model.couple.PostureInput;
-import com.BreedingGrounds.model.nest.Nest;
 import com.BreedingGrounds.service.CoupleService;
 import com.BreedingGrounds.service.GenericService;
 import com.BreedingGrounds.service.SpecieService;
@@ -66,7 +66,7 @@ public class PostureDas extends GenericService implements PostureDao {
 	}
 
 
-
+	@Transactional
 	@Override
 	public List<Posture> selectAllPosturesByCoupleId(UUID coupleId, UUID userProfileId) {
 		final String sql = "SELECT * FROM posture WHERE couple_id = ?::uuid";

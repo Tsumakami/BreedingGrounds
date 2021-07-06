@@ -11,12 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.BreedingGrounds.model.birds.BirdAllInfo;
 import com.BreedingGrounds.model.couple.Couple;
 import com.BreedingGrounds.model.couple.CoupleInput;
-import com.BreedingGrounds.model.couple.Posture;
-import com.BreedingGrounds.model.couple.PostureInput;
 import com.BreedingGrounds.service.BirdService;
 import com.BreedingGrounds.service.GenericService;
 
@@ -60,6 +59,7 @@ public class CoupleDas extends GenericService implements CoupleDao {
 		return result;
 	}
 
+	@Transactional
 	@Override
 	public List<Couple> selectAllCouples(UUID userProfileId) {
 		final String sql = "SELECT * FROM couple where user_profile_id = ?::uuid ";
@@ -80,6 +80,7 @@ public class CoupleDas extends GenericService implements CoupleDao {
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public Optional<Couple> selectCoupleById(UUID id, UUID userProfileId) {
 		final String sql = "SELECT * FROM couple WHERE id = ?::uuid and user_profile_id = ?::uuid";
@@ -103,7 +104,8 @@ public class CoupleDas extends GenericService implements CoupleDao {
 		
 		return Optional.ofNullable(couple);
 	}
-
+	
+	@Transactional
 	public Optional<Couple> selectCoupleBymaleBirdId(UUID maleBirdId, UUID userProfileId) {
 		final String sql = "SELECT * FROM couple WHERE male_bird = ?::uuid and user_profile_id = ?::uuid";
 		final ResultSetExtractor<List<Couple>> resultExtractor = coupleResultExtractor(userProfileId);
@@ -127,6 +129,7 @@ public class CoupleDas extends GenericService implements CoupleDao {
 		return Optional.ofNullable(couple);
 	}
 	
+	@Transactional
 	public Optional<Couple> selectCoupleByfemaleBirdId(UUID femaleBirdId, UUID userProfileId) {
 		final String sql = "SELECT * FROM couple WHERE female_bird = ?::uuid and user_profile_id = ?::uuid";
 		final ResultSetExtractor<List<Couple>> resultExtractor = coupleResultExtractor(userProfileId);
